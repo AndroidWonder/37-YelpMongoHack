@@ -42,9 +42,9 @@ public class MainActivity extends AppCompatActivity {
 
     // Defaults for example
     private String TERM = "dinner";
-    private String LOCATION = "Boston, MA";
-    // private String LOCATION = "San Francisco, CA";
-    private int SEARCH_LIMIT = 5;
+    //private String LOCATION = "Boston, MA";
+     private String LOCATION = "San Francisco, CA";
+    private int SEARCH_LIMIT = 50;
 
     private TextView text = null;
 
@@ -158,16 +158,20 @@ public class MainActivity extends AppCompatActivity {
 
                     Log.e("JSON", value);
 
-                    String coords = "{ type: Point, coordinates:[" +  Double.toString(longitude) + "," + Double.toString(latitude) + "]}";
-                    Log.e("JSON", coords);
+                    //String coords = "{ type: Point, coordinates:[" +  Double.toString(longitude) + "," + Double.toString(latitude) + "]}";
+                    Document coords = new Document("name","coordinates");
+                    coords.append("longitude", longitude);
+                    coords.append("latitude", latitude);
+                    String pair = coords.toJson();
+                    Log.e("JSON", pair);
 
                     /**** Insert ****/
                     // create a document to store key and value
                     Document document = new Document("name", name);
                     document.append("rating", new Double(rating));
-                    document.append("review_count", review); 
+                    document.append("review_count", new Integer(review));
                     document.append("createdDate", new Date());
-                    document.append("geometry", coords);
+                    document.append("coordinates",pair);
                     collection.insertOne(document);
 
                 }
