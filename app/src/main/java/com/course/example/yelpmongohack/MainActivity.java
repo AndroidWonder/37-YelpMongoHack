@@ -44,7 +44,7 @@ public class MainActivity extends AppCompatActivity {
     private String TERM = "dinner";
     private String LOCATION = "Boston, MA";
     // private String LOCATION = "San Francisco, CA";
-    private int SEARCH_LIMIT = 50;
+    private int SEARCH_LIMIT = 5;
 
     private TextView text = null;
 
@@ -76,7 +76,8 @@ public class MainActivity extends AppCompatActivity {
             MongoClient mongoClient = new MongoClient("frodo.bentley.edu", 27017);
             MongoDatabase database = mongoClient.getDatabase("yelp");
             MongoCollection<Document> collection = database.getCollection("rest");
-
+            collection.drop();
+            collection = database.getCollection("rest");
 
             StringBuilder builder = new StringBuilder();
 
@@ -143,6 +144,11 @@ public class MainActivity extends AppCompatActivity {
                     String rating = place.getString("rating");
                     String review = place.getString("review_count");
 
+                    //get latitude and longitude
+                    JSONObject coordinates = place.getJSONObject("coordinates");
+                    double latitude = coordinates.getDouble("latitude");
+                    double longitude = coordinates.getDouble("longitude");
+
                     String value = name + ", rating " + rating + ", " + review + " reviews";
 
                     //sent to Handler queue
@@ -152,12 +158,16 @@ public class MainActivity extends AppCompatActivity {
 
                     Log.e("JSON", value);
 
+                    String coords = "{ type: Point, coordinates:[" +  Double.toString(longitude) + "," + Double.toString(latitude) + "]}";
+                    Log.e("JSON", coords);
+
                     /**** Insert ****/
                     // create a document to store key and value
                     Document document = new Document("name", name);
-                    document.append("rating", rating);
-                    document.append("review_count", review);
+                    document.append("rating", new Double(rating));
+                    document.append("review_count", review); 
                     document.append("createdDate", new Date());
+                    document.append("geometry", coords);
                     collection.insertOne(document);
 
                 }
