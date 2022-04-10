@@ -2,10 +2,11 @@ package com.course.example.yelpmongohack;
 
 import android.os.Handler;
 import android.os.Message;
-import android.support.v7.app.AppCompatActivity;
 import android.os.Bundle;
 import android.util.Log;
 import android.widget.TextView;
+
+import androidx.appcompat.app.AppCompatActivity;
 
 import com.mongodb.MongoClient;
 import com.mongodb.client.MongoCollection;
@@ -73,7 +74,7 @@ public class MainActivity extends AppCompatActivity {
         public void run(){
 
             //set up MongoDB database and collection
-            MongoClient mongoClient = new MongoClient("frodo.bentley.edu", 27017);
+            MongoClient mongoClient = new MongoClient("40.70.200.50", 27017);
             MongoDatabase database = mongoClient.getDatabase("yelp");
             MongoCollection<Document> collection = database.getCollection("rest");
             collection.drop();
