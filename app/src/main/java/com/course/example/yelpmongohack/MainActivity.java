@@ -1,6 +1,7 @@
 package com.course.example.yelpmongohack;
 
 import android.os.Handler;
+import android.os.Looper;
 import android.os.Message;
 import android.os.Bundle;
 import android.util.Log;
@@ -44,16 +45,16 @@ public class MainActivity extends AppCompatActivity {
     // Defaults for example
     private String TERM = "dinner";
     //private String LOCATION = "Boston, MA";
-     private String LOCATION = "San Francisco, CA";
+     private String LOCATION = "San Diego, CA";
     private int SEARCH_LIMIT = 50;
 
     private TextView text = null;
 
     //messages from background thread contain data for UI
-    Handler handler = new Handler(){
+    Handler handler = new Handler(Looper.getMainLooper()) {
         public void handleMessage(Message msg) {
-            String title =(String) msg.obj;
-            text.append(title + "\n" +"\n");
+            String title = (String) msg.obj;
+            text.append(title + "\n" + "\n");
         }
     };
 
@@ -74,7 +75,7 @@ public class MainActivity extends AppCompatActivity {
         public void run(){
 
             //set up MongoDB database and collection
-            MongoClient mongoClient = new MongoClient("40.70.200.50", 27017);
+            MongoClient mongoClient = new MongoClient("frodo.bentley.edu", 27017);
             MongoDatabase database = mongoClient.getDatabase("yelp");
             MongoCollection<Document> collection = database.getCollection("rest");
             collection.drop();
